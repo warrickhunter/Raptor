@@ -1,0 +1,133 @@
+<html>
+<head>
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+	<link href="../src/theme/theme.css" rel="stylesheet" type="text/css" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../src/tools/jquery.ui.editor.clean.js"></script>
+	<script type="text/javascript" src="../src/dependencies/jquery-hotkeys.js"></script>
+	<meta charset=utf-8 />
+	<title>Page Rapid test editor</title>
+
+	<script type="text/javascript" src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js"></script>
+	<script type="text/javascript" src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-serializer.js"></script>
+	<script type="text/javascript" src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-cssclassapplier.js"></script>
+	<script type="text/javascript" src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-selectionsaverestore.js"></script>
+
+	<script type="text/javascript" src="../src/tools/jquery.ui.editor.element.js"></script>
+	<script type="text/javascript" src="../src/tools/jquery.ui.editor.fragment.js"></script>
+	<script type="text/javascript" src="../src/tools/jquery.ui.editor.selection.js"></script>
+	<script type="text/javascript" src="../src/tools/jquery.ui.editor.range.js"></script>
+	<script type="text/javascript" src="../src/tools/jquery.ui.editor.string.js"></script>
+
+	<!-- Editor -->
+	<script type="text/javascript" src="../src/jquery.ui.editor.i18n.js"></script>
+	<script type="text/javascript" src="../src/jquery.ui.editor.init.js"></script>
+	<script type="text/javascript" src="../src/jquery.ui.editor.domtools.js"></script>
+	<script type="text/javascript" src="../src/jquery.ui.editor.support.js"></script>
+	<script type="text/javascript" src="../src/jquery.ui.editor.js"></script>
+	
+
+	<!-- Plugins -->
+	<script type="text/javascript" src="../src/plugins/toolbartip/jquery.ui.editor.toolbartip.js"></script>
+	<!--<script type="text/javascript" src="../src/plugins/logo/jquery.ui.editor.logo.js"></script>-->
+	<script type="text/javascript" src="../src/plugins/dock/jquery.ui.editor.dock.js"></script>
+	<script type="text/javascript" src="../src/plugins/clicktoedit/jquery.ui.editor.clicktoedit.js"></script>
+	<script type="text/javascript" src="../src/plugins/color-picker-basic/jquery.ui.editor.color-picker-basic.js"></script>
+	<script type="text/javascript" src="../src/plugins/clean/jquery.ui.editor.clean.js"></script>
+	<script type="text/javascript" src="../src/plugins/clear-formatting/jquery.ui.editor.clear-formatting.js"></script>
+	<!--<script type="text/javascript" src="../src/plugins/float/jquery.ui.editor.float.js"></script>-->
+	<script type="text/javascript" src="../src/plugins/alignment/jquery.ui.editor.alignment.js"></script>
+	<script type="text/javascript" src="../src/plugins/basic/jquery.ui.editor.basic.js"></script>
+	<script type="text/javascript" src="../src/plugins/history/jquery.ui.editor.history.js"></script>
+	<script type="text/javascript" src="../src/plugins/viewsource/jquery.ui.editor.viewsource.js"></script>
+	<script type="text/javascript" src="../src/plugins/guides/jquery.ui.editor.guides.js"></script>
+	<!--<script type="text/javascript" src="../src/plugins/save/jquery.ui.editor.savejson.js"></script>-->
+	<!--<script type="text/javascript" src="../src/plugins/save/jquery.ui.editor.saverest.js"></script>-->
+	<!--<script type="text/javascript" src="../src/plugins/save/jquery.ui.editor.saveui.js"></script>-->
+	<!--<script type="text/javascript" src="../src/plugins/raptorize/jquery.ui.editor.raptorize.js"></script>-->
+	<script type="text/javascript" src="../src/plugins/paste/jquery.ui.editor.paste.js"></script>
+	<!--<script type="text/javascript" src="../src/plugins/cancel/jquery.ui.editor.cancel.js"></script>-->
+	<script type="text/javascript" src="../src/plugins/list/jquery.ui.editor.list.js"></script>
+	<script type="text/javascript" src="../src/plugins/fontsize/jquery.ui.editor.fontsize.js"></script>
+	<script type="text/javascript" src="../src/plugins/hr/jquery.ui.editor.hr.js"></script>
+	<script type="text/javascript" src="../src/plugins/blockquote/jquery.ui.editor.blockquote.js"></script>
+	<script type="text/javascript" src="../src/plugins/tagmenu/jquery.ui.editor.tagmenu.js"></script>
+	<script type="text/javascript" src="../src/plugins/link/jquery.ui.editor.link.js"></script>
+	<!--<script type="text/javascript" src="../src/plugins/imageresize/jquery.ui.editor.imageresize.js"></script>-->
+	<!--<script type="text/javascript" src="../src/plugins/unsavededitwarning/jquery.ui.editor.unsavededitwarning.js"></script>-->
+	<script type="text/javascript" src="../src/plugins/embed/jquery.ui.editor.embed.js"></script>
+	<!--<script type="text/javascript" src="../src/plugins/length/jquery.ui.editor.length.js"></script>-->
+	<!--<script type="text/javascript" src="../src/plugins/i18n/jquery.ui.editor.i18n.js"></script>-->
+	<!--<script type="text/javascript" src="../src/plugins/i18n/locales/en.js"></script>-->
+	<!--<script type="text/javascript" src="../src/plugins/i18n/locales/zh_CN.js"></script>-->
+	<!--<script type="text/javascript" src="../src/plugins/debug/jquery.ui.editor.debug.js"></script>-->
+	<script type="text/javascript" src="../src/plugins/empty-element/jquery.ui.editor.empty-element.js"></script>
+
+
+	<script type="text/javascript">
+        jQuery(function($) {
+            $('.editable').editor({
+            	unloadWarning: false,
+                urlPrefix: '../src/',
+                uiOrder: [
+		            //['logo'],
+		            //['save', 'cancel'],
+		            ['dock', 'showGuides', 'clean'],
+		            ['viewSource'],
+		            ['undo', 'redo'],
+		            ['alignLeft', 'alignCenter', 'alignJustify', 'alignRight'],
+		            ['textBold', 'textItalic', 'textUnderline', 'textStrike'],
+		            ['textSuper', 'textSub'],
+		            ['listUnordered', 'listOrdered'],
+		            ['hr', 'quoteBlock'],
+		            ['fontSizeInc', 'fontSizeDec'],
+		            ['colorPickerBasic'],
+		            ['clearFormatting'],
+		            ['link', 'unlink'],
+		            ['embed'],
+		            //['floatLeft', 'floatNone', 'floatRight'],
+		            ['tagMenu'],
+		            //['i18n'],
+		            //['raptorize'],
+		            //['statistics'],
+		            //['debugReinit', 'debugDestroy']
+		        ]
+            });
+        });
+    </script>
+
+    <script type="text/javascript"> 
+    	var SiteMap = {"12":"Greetings","40":"Greetings > Accomodation","41":"Greetings > Grand Lake","43":"Greetings > Grand Lake > Activities","44":"Greetings > Grand Lake > Restaurants","51":"Greetings > Travel Information","42":"Greetings > Travel Information > Driving Directions","52":"Greetings > Travel Information > Traveling from Australia","54":"Greetings > Travel Information > Altitude Awareness","45":"Greetings > The Event","47":"Greetings > About Us","48":"Greetings > About Us > Marcena","49":"Greetings > About Us > Warrick","50":"Greetings > About Us > Our Story"}; 
+    </script>
+
+</head>
+<body>
+
+	<article class="editable">
+		<header>
+			<h1>Article Header H1</h1>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec.</p>
+		</header>
+		<section>
+			<h2>Article Section H2</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
+		</section>
+		<section>
+			<h2>Article Section H2</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
+		</section>
+		<footer>
+			<h3>Article Footer h3</h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor.</p>
+		</footer>
+	</article>
+
+
+	<div class="editable" style="height:200px;border:1px solid blue;">
+		<img src="http://lorempixel.com/400/200/food" />
+	</div>
+
+</body>
+
+</html>

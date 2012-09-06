@@ -23,6 +23,104 @@
     defaultLinkTypes: [
 
         /**
+         * @name $.editor.plugin.link.defaultLinkTypes.internalPage
+         * @class
+         * @extends $.editor.plugin.link.baseLinkType
+         */
+        /** @lends $.editor.plugin.link.defaultLinkTypes.internalPage.prototype */ 
+        {
+
+            /**
+             * @see $.editor.plugin.link.baseLinkType#type
+             */
+            type: 'internalPage',
+
+            /**
+             * @see $.editor.plugin.link.baseLinkType#title
+             */
+            title: _('Page from my website'),
+
+            /**
+             * @see $.editor.plugin.link.baseLinkType#focusSelector
+             */
+            focusSelector: 'input[name="location"]',
+
+            /**
+             * @see $.editor.plugin.link.baseLinkType#init
+             */
+            init: function() {
+                this.content = this.plugin.editor.getTemplate('link.internal-page', this.options);
+                return this;
+            },
+
+            /**
+             * @see $.editor.plugin.link.baseLinkType#show
+             */
+            show: function(panel, edit) {
+
+                var link = this;
+
+                // fill select with options
+                if(typeof SiteMap !== "undefined") {
+                    for(x in SiteMap) {
+                      //$('body').append(x + " : " + SiteMap[x] + "<br/>"); 
+                      panel.find('select[name="internal-page-id"]').append("<option value='"+ x +"'>"+ SiteMap[x] +"</option>");
+                    }
+                }
+                
+                if (edit) {
+                    panel.find('select[name="internal-page-id"]').val(this.plugin.selectedElement.attr('data-cms-pageid')).
+                        trigger('click');
+                    if (this.plugin.selectedElement.attr('target') === '_blank') {
+                        panel.find('input[name="blank"]').attr('checked', 'checked');
+                    }
+                }
+
+                return this;
+            },
+
+            /**
+             * @see $.editor.plugin.link.baseLinkType#attributes
+             */
+            attributes: function(panel) {
+                var attributes = {
+                    href: '#',
+                    title: panel.find('select[name="internal-page-id"] option:selected').text(),
+                    'data-cms-pageid': panel.find('select[name="internal-page-id"]').val()
+                };
+
+                if (panel.find('input[name="blank"]').is(':checked')) attributes.target = '_blank';
+
+                return attributes;
+            },
+
+            /**
+             * @return {Boolean} True if the link is valid
+             */
+            validate: function(panel) {
+
+                //var href = panel.find('input[name="location"]').val();
+                //var errorMessageSelector = '.' + this.options.baseClass + '-error-message-file-url';
+                var isValid = true;
+                /*
+                if (!this.options.regexLink.test(href)) {
+                    if (!panel.find(errorMessageSelector).size()) {
+                        panel.find('input[name="location"]').after(this.plugin.editor.getTemplate('link.error', $.extend({}, this.options, {
+                            messageClass: this.options.baseClass + '-error-message-file-url',
+                            message: _('The URL does not look well formed')
+                        })));
+                    }
+                    panel.find(errorMessageSelector).not(':visible').show();
+                    isValid = false;
+                } else {
+                    panel.find(errorMessageSelector).has(':visible').hide();
+                }
+                */
+                return isValid;
+            }
+        },
+
+        /**
          * @name $.editor.plugin.link.defaultLinkTypes.page
          * @class
          * @extends $.editor.plugin.link.baseLinkType
@@ -37,7 +135,7 @@
             /**
              * @see $.editor.plugin.link.baseLinkType#title
              */
-            title: _('Page on this or another website'),
+            title: _('Page on another website'),
 
             /**
              * @see $.editor.plugin.link.baseLinkType#focusSelector
@@ -205,101 +303,10 @@
 
                 return isValid;
             }
-        },
-
-        /**
-         * @name $.editor.plugin.link.defaultLinkTypes.fileUrl
-         * @class
-         * @extends $.editor.plugin.link.baseLinkType
-         */
-        /** @lends $.editor.plugin.link.defaultLinkTypes.fileUrl.prototype */ {
-
-            /**
-             * @see $.editor.plugin.link.baseLinkType#type
-             */
-            type: 'fileUrl',
-
-            /**
-             * @see $.editor.plugin.link.baseLinkType#title
-             */
-            title: _('Document or other file'),
-
-            /**
-             * @see $.editor.plugin.link.baseLinkType#focusSelector
-             */
-            focusSelector: 'input[name="location"]',
-
-            /**
-             * @see $.editor.plugin.link.baseLinkType#init
-             */
-            init: function() {
-                this.content = this.plugin.editor.getTemplate('link.file-url', this.options);
-                return this;
-            },
-
-            /**
-             * @see $.editor.plugin.link.baseLinkType#show
-             */
-            show: function(panel, edit) {
-
-                var link = this;
-                panel.find('input[name="location"]').bind('keyup', function(){
-                    link.validate(panel);
-                });
-
-                if (edit) {
-                    panel.find('input[name="location"]').val(this.plugin.selectedElement.attr('href')).
-                        trigger('click');
-                    if (this.plugin.selectedElement.attr('target') === '_blank') {
-                        panel.find('input[name="blank"]').attr('checked', 'checked');
-                    }
-                }
-
-                return this;
-            },
-
-            /**
-             * @see $.editor.plugin.link.baseLinkType#attributes
-             */
-            attributes: function(panel) {
-                var attributes = {
-                    href: panel.find('input[name="location"]').val()
-                };
-
-                if (panel.find('input[name="blank"]').is(':checked')) attributes.target = '_blank';
-
-                if (!this.options.regexLink.test(attributes.href)) {
-                    this.plugin.editor.showWarning(_('The url for the file you inserted doesn\'t look well formed'));
-                }
-
-                return attributes;
-            },
-
-            /**
-             * @return {Boolean} True if the link is valid
-             */
-            validate: function(panel) {
-
-                var href = panel.find('input[name="location"]').val();
-                var errorMessageSelector = '.' + this.options.baseClass + '-error-message-file-url';
-                var isValid = true;
-
-                if (!this.options.regexLink.test(href)) {
-                    if (!panel.find(errorMessageSelector).size()) {
-                        panel.find('input[name="location"]').after(this.plugin.editor.getTemplate('link.error', $.extend({}, this.options, {
-                            messageClass: this.options.baseClass + '-error-message-file-url',
-                            message: _('The URL does not look well formed')
-                        })));
-                    }
-                    panel.find(errorMessageSelector).not(':visible').show();
-                    isValid = false;
-                } else {
-                    panel.find(errorMessageSelector).has(':visible').hide();
-                }
-
-                return isValid;
-            }
         }
+
+        
+        
 
     ],
 
@@ -561,7 +568,7 @@
         if (!edit) {
             selectionWrapTagWithAttribute('a', $.extend(attributes, { id: this.editor.getUniqueId() }), linkType.classes);
             this.editor.showConfirm(_('Added link: {{link}}', { link: link }));
-            this.selectedElement = $('#' + attributes.id).removeAttr('id');
+            this.selectedElement = $('#' + attributes.id).removeAttr('id').attr(attributes);
         } else {
             // Remove all link type classes
             this.selectedElement[0].className = this.selectedElement[0].className.replace(new RegExp(this.options.baseClass + '-[a-zA-Z]+','g'), '');

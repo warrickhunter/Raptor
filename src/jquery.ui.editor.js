@@ -23,7 +23,6 @@ $.widget('ui.editor',
             $.ui.editor.instances.push(this);
         }
 
-        // <strict>
         // Check for nested editors
         var currentInstance = this;
         $.ui.editor.eachInstance(function(instance) {
@@ -32,7 +31,6 @@ $.widget('ui.editor',
                 handleError('Nesting editors is unsupported', currentInstance.element, instance.element);
             }
         });
-        // </strict>
 
         this.options = $.extend({}, $.ui.editor.defaults, this.options);
 
@@ -675,6 +673,7 @@ $.widget('ui.editor',
             wrapper.draggable({
                 cancel: 'a, button',
                 cursor: 'move',
+                containment: 'parent',
                 // @todo Cancel drag when docked
                 // @todo Move draggable into plugin
                 // @todo Move tag menu/list into plugin

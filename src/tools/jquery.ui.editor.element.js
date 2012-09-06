@@ -79,7 +79,6 @@ function elementOuterText(element) {
 
 /**
  * Determine whether element is block.
- *
  * @param  {Element} element The element to test.
  * @return {Boolean} True if the element is a block element
  */
@@ -89,7 +88,6 @@ function elementIsBlock(element) {
 
 /**
  * Determine whether element is inline or block.
- *
  * @see http://stackoverflow.com/a/2881008/187954
  * @param  {string} tag Lower case tag name, e.g. 'a'.
  * @return {string} Default display style for tag.
@@ -107,8 +105,7 @@ function elementDefaultDisplay(tag) {
 }
 
 /**
- * Check that the given element is one of the the given tags.
- *
+ * Check that the given element is one of the the given tags
  * @param  {jQuery|Element} element The element to be tested.
  * @param  {Array}  validTagNames An array of valid tag names.
  * @return {Boolean} True if the given element is one of the give valid tags.
@@ -119,8 +116,7 @@ function elementIsValid(element, validTags) {
 
 /**
  * Calculate and return the visible rectangle for the element.
- *
- * @param  {jQuery|Element} element The element to calculate the visible rectangle for.
+ * @param  {Element|jQuery} element The element to calculate the visible rectangle for.
  * @return {Object} Visible rectangle for the element.
  */
 function elementVisibleRect(element) {
@@ -159,20 +155,4 @@ function elementVisibleRect(element) {
     }
 
     return rect;
-}
-
-/**
- * Returns a map of an elements attributes and values. The result of this function
- * can be passed directly to $('...').attr(result);
- *
- * @param  {jQuery|Element|Selector} element The element to get the attributes from.
- * @return {Object} A map of attribute names mapped to their values.
- */
-function elementGetAttributes(element) {
-    var attributes = $(element).get(0).attributes,
-        result = {};
-    for (var i = 0, l = attributes.length; i < l; i++) {
-        result[attributes[i].name] = attributes[i].value;
-    }
-    return result;
 }
