@@ -19,7 +19,7 @@ $.ui.editor.registerUi({
             return this.editor.uiButton({
                 title: _('Clear Formatting'),
                 click: function() {
-                    var sel = rangy.getSelection();
+                    var sel = getEditorSelection();
                     if (sel.rangeCount > 0) {
                         // Create a copy of the selection range to work with
                         var range = sel.getRangeAt(0).cloneRange();

@@ -13,7 +13,11 @@ var savedSelection = false;
  */
 function selectionSave(overwrite) {
     if (savedSelection && !overwrite) return;
-    savedSelection = rangy.saveSelection();
+
+    if(rangy.IframeWindow)
+        savedSelection = rangy.saveSelection(rangy.IframeWindow);
+    else
+        savedSelection = rangy.saveSelection();
 }
 
 /**
@@ -41,6 +45,16 @@ function selectionSaved() {
 }
 
 /**
+ * Overrides the get selection function to include iframe if it's set.
+ */
+function getEditorSelection() {
+    if(rangy.Iframe)
+        return rangy.getIframeSelection(rangy.Iframe);
+    else
+        return rangy.getSelection();
+}
+
+/**
  * Iterates over all ranges in a selection and calls the callback for each
  * range. The selection/range offsets is updated in every iteration in in the
  * case that a range was changed or removed by a previous iteration.
@@ -51,7 +65,7 @@ function selectionSaved() {
  * @param {object} [context] The context in which to call the callback.
  */
 function selectionEachRange(callback, selection, context) {
-    selection = selection || rangy.getSelection();
+    selection = selection || getEditorSelection();
     var range, i = 0;
     // Create a new range set every time to update range offsets
     while (range = selection.getAllRanges()[i++]) {
@@ -60,7 +74,7 @@ function selectionEachRange(callback, selection, context) {
 }
 
 function selectionSet(mixed) {
-    rangy.getSelection().setSingleRange(mixed);
+    getEditorSelection().setSingleRange(mixed);
 }
 
 /**
@@ -81,10 +95,10 @@ function selectionReplace(html, sel) {
  * @param {RangySelection} [selection] A RangySelection, or by default, the current selection.
  */
 function selectionSelectInner(element, selection) {
-    selection = selection || rangy.getSelection();
+    selection = selection || getEditorSelection();
     selection.removeAllRanges();
     $(element).focus().contents().each(function() {
-        var range = rangy.createRange();
+        var range = rangy.createRange(rangy.IframeDocument);
         range.selectNodeContents(this);
         selection.addRange(range);
     });
@@ -98,10 +112,10 @@ function selectionSelectInner(element, selection) {
  * @param {RangySelection} [selection] A RangySelection, or null to use the current selection.
  */
 function selectionSelectOuter(element, selection) {
-    selection = selection || rangy.getSelection();
+    selection = selection || getEditorSelection();
     selection.removeAllRanges();
     $(element).each(function() {
-        var range = rangy.createRange();
+        var range = rangy.createRange(rangy.IframeDocument);
         range.selectNode(this);
         selection.addRange(range);
     }).focus();
@@ -115,11 +129,11 @@ function selectionSelectOuter(element, selection) {
  * @param {Boolean} start True to select the start of the element.
  */
 function selectionSelectEdge(element, selection, start) {
-    selection = selection || rangy.getSelection();
+    selection = selection || getEditorSelection();
     selection.removeAllRanges();
 
     $(element).each(function() {
-        var range = rangy.createRange();
+        var range = rangy.createRange(rangy.IframeDocument);
         range.selectNodeContents(this);
         range.collapse(start);
         selection.addRange(range);
@@ -151,14 +165,14 @@ function selectionSelectStart(element, selection) {
  * @return {string} The html content of the selection.
  */
 function selectionGetHtml(selection) {
-    selection = selection || rangy.getSelection();
+    selection = selection || getEditorSelection();
     return selection.toHtml();
 }
 
 function selectionGetElement(range) {
     var commonAncestor;
 
-    range = range || rangy.getSelection().getRangeAt(0);
+    range = range || getEditorSelection().getRangeAt(0);
 
     // Check if the common ancestor container is a text node
     if (range.commonAncestorContainer.nodeType === 3) {
@@ -186,7 +200,7 @@ function selectionGetElements(selection) {
 }
 
 function selectionGetStartElement() {
-    var selection = rangy.getSelection();
+    var selection = getEditorSelection();
     if (selection.anchorNode === null) {
         return null;
     }
@@ -198,7 +212,7 @@ function selectionGetStartElement() {
 }
 
 function selectionGetEndElement() {
-    var selection = rangy.getSelection();
+    var selection = getEditorSelection();
     if (selection.anchorNode === null) {
         return null;
     }
@@ -209,7 +223,7 @@ function selectionGetEndElement() {
 }
 
 function selectionAtEndOfElement() {
-    var selection = rangy.getSelection();
+    var selection = getEditorSelection();
     var focusNode = selection.isBackwards() ? selection.anchorNode : selection.focusNode;
     var focusOffset = selection.isBackwards() ? selection.focusOffset : selection.anchorOffset;
     if (focusOffset !== focusNode.textContent.length) {
@@ -224,7 +238,7 @@ function selectionAtEndOfElement() {
 }
 
 function selectionAtStartOfElement() {
-    var selection = rangy.getSelection();
+    var selection = getEditorSelection();
     var anchorNode = selection.isBackwards() ? selection.focusNode : selection.anchorNode;
     if (selection.isBackwards() ? selection.focusOffset : selection.anchorOffset !== 0) {
         return false;
@@ -238,7 +252,7 @@ function selectionAtStartOfElement() {
 }
 
 function selectionIsEmpty() {
-    return rangy.getSelection().toHtml() === '';
+    return getEditorSelection().toHtml() === '';
 }
 
 /**
@@ -304,19 +318,19 @@ function selectionExists(sel) {
  * @param  {RangySelection|null} selection The selection to replace, or null for the current selection.
  */
 function selectionReplaceSplittingSelectedElement(html, selection) {
-    selection = selection || rangy.getSelection();
+    selection = selection || getEditorSelection();
 
     var selectionRange = selection.getRangeAt(0);
     var selectedElement = selectionGetElements()[0];
 
     // Select from start of selected element to start of selection
-    var startRange = rangy.createRange();
+    var startRange = rangy.createRange(rangy.IframeDocument);
     startRange.setStartBefore(selectedElement);
     startRange.setEnd(selectionRange.startContainer, selectionRange.startOffset);
     var startFragment = startRange.cloneContents();
 
     // Select from end of selected element to end of selection
-    var endRange = rangy.createRange();
+    var endRange = rangy.createRange(rangy.IframeDocument);
     endRange.setStart(selectionRange.endContainer, selectionRange.endOffset);
     endRange.setEndAfter(selectedElement);
     var endFragment = endRange.cloneContents();
@@ -337,7 +351,7 @@ function selectionReplaceSplittingSelectedElement(html, selection) {
  * @param  {RangySeleciton|null} selection The selection to replace, or null for the current selection.
  */
 function selectionReplaceWithinValidTags(html, validTagNames, selection) {
-    selection = selection || rangy.getSelection();
+    selection = selection || getEditorSelection();
 
     var startElement = selectionGetStartElement()[0];
     var endElement = selectionGetEndElement()[0];

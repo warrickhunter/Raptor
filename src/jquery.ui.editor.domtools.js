@@ -26,7 +26,7 @@ var domTools = {
      */
     constrainSelection: function(element, selection) {
         element = $(element)[0];
-        selection = selection || rangy.getSelection();
+        selection = selection || getEditorSelection();
 
         var commonAncestor;
         $(selection.getAllRanges()).each(function(i, range){
@@ -183,19 +183,28 @@ var domTools = {
             // Check if tag 2 is applied to range
             if (applier2.isAppliedToRange(range)) {
                 // Remove tag 2 to range
-                applier2.toggleSelection();
+                applier2.toggleSelection(rangy.IframeWindow);
             } else {
                 // Apply tag 1 to range
                 rangy.createCssClassApplier(class1, {
                     elementTagName: id
-                }).toggleSelection();
+                }).toggleSelection(rangy.IframeWindow);
             }
         }, null, this);
 
-        // Replace the temparay tag with the correct tag
-        $(id).each(function() {
-            $(this).replaceWith($('<' + tag1 + '/>').addClass(class1).html($(this).html()));
-        });
+        if(!rangy.Iframe) {
+            // Replace the temparay tag with the correct tag
+            $(id).each(function() {
+                $(this).replaceWith($('<' + tag1 + '/>').addClass(class1).html($(this).html()));
+            });
+        }
+        else
+        {
+            // Replace the temparay tag with the correct tag
+            $(rangy.Iframe).contents().find(id).each(function() {
+                $(this).replaceWith($('<' + tag1 + '/>').addClass(class1).html($(this).html()));
+            });
+        }
 
         selectionRestore();
     },

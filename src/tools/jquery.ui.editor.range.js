@@ -56,7 +56,7 @@ function rangeEmptyTag(range) {
  * @return {Element} The selected range's common ancestor.
  */
 function rangeGetCommonAncestor(selection) {
-    selection = selection || rangy.getSelection();
+    selection = selection || getEditorSelection();
 
     var commonAncestor;
     $(selection.getAllRanges()).each(function(i, range){

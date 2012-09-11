@@ -64,6 +64,14 @@ $.widget('ui.editor',
             this.element.attr('id', this.getUniqueId());
         }
 
+        // iframe setup
+        if(this.options.Iframe) {
+            rangy.Iframe = $(this.options.Iframe).get(0);
+            rangy.IframeWindow = $(this.options.Iframe)[0].contentWindow.window;
+            rangy.IframeDocument = $(this.options.Iframe)[0].contentWindow.window.document;
+        }
+
+
         // Initialise properties
         this.ready = false;
         this.events = {};
@@ -294,7 +302,7 @@ $.widget('ui.editor',
      */
     checkChange: function() {
         // Check if the caret has changed position
-        var currentSelection = rangy.serializeSelection();
+        var currentSelection = rangy.serializeSelection(getEditorSelection());
         if (this.previousSelection !== currentSelection) {
             this.fire('selectionChange');
         }
@@ -421,7 +429,7 @@ $.widget('ui.editor',
             this.enabled = false;
             this.getElement().attr('contenteditable', false)
                         .removeClass(this.options.baseClass + '-editing');
-            rangy.getSelection().removeAllRanges();
+            getEditorSelection().removeAllRanges();
             this.fire('disabled');
         }
     },
